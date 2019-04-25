@@ -169,6 +169,33 @@ class BitmapData {
 		case SoftAdd, AlphaAdd, AlphaMultiply, Sub, Max, Min:
 			throw "BlendMode not supported";
 		}
+		#elseif js
+		
+		if( blendMode == null ) blendMode = Alpha;
+		
+		var b = switch( blendMode ) 
+		{
+			case None:
+				null;	
+			case Alpha:
+				"source-over";
+			case Add:
+				"lighter";
+			case Erase:
+				"xor";
+			case Multiply:
+				"multiply";
+			case Screen:
+				"screen";
+			case SoftAdd, AlphaAdd, AlphaMultiply, Sub, Max, Min:
+				throw "BlendMode not supported";
+		}
+		
+		if(b != null)
+			ctx.globalCompositeOperation = b;
+		
+		ctx.drawImage(src.ctx.canvas, srcX, srcY, width, height, x, y, width, height);
+		
 		#else
 		notImplemented();
 		#end
